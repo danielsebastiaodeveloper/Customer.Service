@@ -32,11 +32,5 @@ public class UpdateCustomerValidator : AbstractValidator<UpdateCustomerCommand>
          .WithMessage("{PropertyName} is required")
          .NotNull()
          .WithMessage("{PropertyName} can not be null");
-
-        RuleFor(c => c.State)
-         .NotEmpty()
-         .WithMessage("{PropertyName} is required")
-         .NotNull()
-         .WithMessage("{PropertyName} can not be null");
     }
 }

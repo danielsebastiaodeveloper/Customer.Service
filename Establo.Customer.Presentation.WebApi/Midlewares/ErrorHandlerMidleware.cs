@@ -1,6 +1,6 @@
 ﻿using Core.Application.Wrappers;
-using Core.Domain.Exceptions;
 using Establo.Customer.Core.Domain.Pocos;
+using Mexico.Developers.Core.Exceptions;
 using System.Net;
 using System.Text.Json;
 
