@@ -41,7 +41,7 @@ public class ErrorHandlerMidleware
                 case Core.Application.Exceptions.ValidationException e:
                     // Custom Application
                     response.StatusCode = (int)HttpStatusCode.BadRequest;
-                    responseModel.Errors = e.Erros;
+                    responseModel.Errors = e.Errors;
                     break;
                 case KeyNotFoundException e:
                     //Not Found Error

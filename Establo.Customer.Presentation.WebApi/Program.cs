@@ -6,9 +6,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 var configuration = builder.Configuration;
 
-var texto = Environment.GetEnvironmentVariable("EstabloCustomerDBConnectionString");
-Console.WriteLine($"Valor:{texto}");
-
 // Add services to the container.
 builder.Services.AddEstabloDependencies(configuration);
 

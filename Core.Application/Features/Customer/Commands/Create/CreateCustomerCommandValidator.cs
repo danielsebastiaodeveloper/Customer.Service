@@ -4,6 +4,9 @@ namespace Core.Application.Features.Customer.Commands.Create;
 
 public class CreateCustomerCommandValidator : AbstractValidator<CreateCustomerCommand>
 {
+    /// <summary>
+    /// Validates the CreateCustomerCommand object.
+    /// </summary>
     public CreateCustomerCommandValidator()
     {
         RuleFor(c => c.FullName)

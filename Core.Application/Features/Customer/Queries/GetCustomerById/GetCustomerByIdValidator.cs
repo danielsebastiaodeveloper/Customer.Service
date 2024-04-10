@@ -4,6 +4,9 @@ namespace Core.Application.Features.Customer.Queries.GetCustomerById;
 
 public class GetCustomerByIdValidator : AbstractValidator<GetCustomerByIdQuery>
 {
+    /// <summary>
+    /// Validates the GetCustomerByIdQuery object.
+    /// </summary>
     public GetCustomerByIdValidator()
     {
         RuleFor(c => c.Id)

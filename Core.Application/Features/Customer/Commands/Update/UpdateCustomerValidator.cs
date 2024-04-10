@@ -3,6 +3,9 @@
 namespace Core.Application.Features.Customer.Commands.Update;
 public class UpdateCustomerValidator : AbstractValidator<UpdateCustomerCommand>
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="UpdateCustomerValidator"/> class.
+    /// </summary>
     public UpdateCustomerValidator()
     {
         RuleFor(c => c.Id)

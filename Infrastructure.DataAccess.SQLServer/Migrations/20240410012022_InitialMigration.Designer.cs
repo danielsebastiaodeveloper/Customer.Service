@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.DataAccess.SQLServer.Migrations
 {
     [DbContext(typeof(EstabloCustomerDBContext))]
-    [Migration("20240405070834_InitialMigration")]
+    [Migration("20240410012022_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -24,6 +24,44 @@ namespace Infrastructure.DataAccess.SQLServer.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("Core.Domain.Pocos.PointsTransaction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<decimal>("Points")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<bool>("State")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("TransactionDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserCreatorId")
+                        .HasMaxLength(256)
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
+
+                    b.ToTable("PointsTransactions", (string)null);
+                });
 
             modelBuilder.Entity("Establo.Customer.Core.Domain.Pocos.Customer", b =>
                 {
@@ -47,6 +85,9 @@ namespace Infrastructure.DataAccess.SQLServer.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(15)");
 
+                    b.Property<decimal>("Points")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<bool>("State")
                         .HasColumnType("bit");
 
@@ -57,6 +98,22 @@ namespace Infrastructure.DataAccess.SQLServer.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Customers", (string)null);
+                });
+
+            modelBuilder.Entity("Core.Domain.Pocos.PointsTransaction", b =>
+                {
+                    b.HasOne("Establo.Customer.Core.Domain.Pocos.Customer", "Customer")
+                        .WithMany("PointsTransactions")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+                });
+
+            modelBuilder.Entity("Establo.Customer.Core.Domain.Pocos.Customer", b =>
+                {
+                    b.Navigation("PointsTransactions");
                 });
 #pragma warning restore 612, 618
         }
