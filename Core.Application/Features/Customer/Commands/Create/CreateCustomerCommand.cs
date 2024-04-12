@@ -1,7 +1,8 @@
-﻿using Core.Application.Mappers;
+﻿using MediatR;
+using Core.Application.Mappers;
 using Core.Application.Wrappers;
+using Core.Domain.Abstractions;
 using Establo.Customer.Core.Domain.Abstractions;
-using MediatR;
 
 namespace Core.Application.Features.Customer.Commands.Create;
 
@@ -32,14 +33,16 @@ public class CreateCustomerCommand : IRequest<Response<int>>
 public class CreateCustomerCommandHandler : IRequestHandler<CreateCustomerCommand, Response<int>>
 {
     private readonly ICustomerRepository _customerRepository;
+    private readonly IUnitOfWork unitOfWork;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CreateCustomerCommandHandler"/> class.
     /// </summary>
     /// <param name="clienteRepository">The customer repository.</param>
-    public CreateCustomerCommandHandler(ICustomerRepository clienteRepository)
+    public CreateCustomerCommandHandler(ICustomerRepository clienteRepository, IUnitOfWork unitOfWork)
     {
         _customerRepository = clienteRepository;
+        this.unitOfWork = unitOfWork;
     }
 
     /// <summary>
@@ -51,11 +54,12 @@ public class CreateCustomerCommandHandler : IRequestHandler<CreateCustomerComman
     public async Task<Response<int>> Handle(CreateCustomerCommand request, CancellationToken cancellationToken)
     {
         var customer = request.ToCustomer();
-        var result = await _customerRepository.CreateItemAsync(customer, cancellationToken);
+        await _customerRepository.CreateItemAsync(customer, cancellationToken);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
         var response = new Response<int>()
         {
-            Data = result,
-            Success = result > 0 ? true : false
+            Data = customer.Id,
+            Success = customer.Id > 0 ? true : false
         };
         return response;
     }

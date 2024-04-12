@@ -2,7 +2,6 @@
 using Core.Application.Mappers;
 using Core.Application.Wrappers;
 using Core.Domain.Abstractions;
-using Core.Application.Features.Customer.Commands.Update;
 
 namespace Core.Application.Features.PointsTransaction.Commands.Create;
 
@@ -34,15 +33,17 @@ public class InsertPointCommandHandler : IRequestHandler<InsertPointCommand, Res
 {
     private readonly IPointsTransactionRepository pointsTransactionRepository;
     private readonly IMediator mediator;
+    private readonly IUnitOfWork unitOfWork;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="InsertPointCommandHandler"/> class.
     /// </summary>
     /// <param name="pointsTransactionRepository">The points transaction repository.</param>
-    public InsertPointCommandHandler(IPointsTransactionRepository pointsTransactionRepository, IMediator mediator)
+    public InsertPointCommandHandler(IPointsTransactionRepository pointsTransactionRepository, IMediator mediator, IUnitOfWork unitOfWork)
     {
         this.pointsTransactionRepository = pointsTransactionRepository;
         this.mediator = mediator;
+        this.unitOfWork = unitOfWork;
     }
 
     /// <summary>
@@ -54,11 +55,13 @@ public class InsertPointCommandHandler : IRequestHandler<InsertPointCommand, Res
     public async Task<Response<bool>> Handle(InsertPointCommand request, CancellationToken cancellationToken)
     {
         var result = await pointsTransactionRepository.InserPointByStoredProcedureAsync(request.CustomerId, request.Points, request.Description, 1, cancellationToken);
-       
+        //var point = request.ToTransaction();
+        //var result = await pointsTransactionRepository.InserPointAsync(point, cancellationToken);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
         var response = new Response<bool>
         {
             Data = result,
-            Success = result
+            Success = result,
         };
         return response;
     }

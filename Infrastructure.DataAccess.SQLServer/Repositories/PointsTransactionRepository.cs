@@ -88,4 +88,10 @@ public class PointsTransactionRepository : RepositoryBase<int, int>, IPointsTran
         }
         return success;
     }
+
+    public async Task<TEntity> InserPointAsync<TEntity>(TEntity entity, CancellationToken cancellationToken) where TEntity : class, IEntityBase<int, int>
+    {
+        await Context.AddAsync(entity, cancellationToken);
+        return entity;
+    }
 }

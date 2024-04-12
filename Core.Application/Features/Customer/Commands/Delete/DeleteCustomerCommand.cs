@@ -1,6 +1,7 @@
 using MediatR;
 using Core.Application.Wrappers;
 using Establo.Customer.Core.Domain.Abstractions;
+using Core.Domain.Abstractions;
 
 namespace Core.Application.Features.Customer.Commands.Delete
 {
@@ -24,14 +25,16 @@ namespace Core.Application.Features.Customer.Commands.Delete
     public class DeleteCustomerBySortKeyCommandHandler : IRequestHandler<DeleteCustomerCommand, Response<bool>>
     {
         private readonly ICustomerRepository _customerRepository;
+        private readonly IUnitOfWork unitOfWork;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DeleteCustomerBySortKeyCommandHandler"/> class.
         /// </summary>
         /// <param name="customerRepository">The customer repository.</param>
-        public DeleteCustomerBySortKeyCommandHandler(ICustomerRepository customerRepository)
+        public DeleteCustomerBySortKeyCommandHandler(ICustomerRepository customerRepository, IUnitOfWork unitOfWork)
         {
             this._customerRepository = customerRepository;
+            this.unitOfWork = unitOfWork;
         }
 
         /// <summary>
@@ -42,11 +45,12 @@ namespace Core.Application.Features.Customer.Commands.Delete
         /// <returns>A response indicating the success of the delete operation.</returns>
         public async Task<Response<bool>> Handle(DeleteCustomerCommand request, CancellationToken cancellationToken)
         {
-            var result = await _customerRepository.DeleteAsync<Establo.Customer.Core.Domain.Pocos.Customer>(request.Id, cancellationToken);
+            await _customerRepository.DeleteAsync<Establo.Customer.Core.Domain.Pocos.Customer>(request.Id, cancellationToken);
+            await unitOfWork.SaveChangesAsync(cancellationToken);
             var response = new Response<bool>
             {
-                Success = result,
-                Data = result
+                Success = true,
+                Data = true
             };
             return response;
         }

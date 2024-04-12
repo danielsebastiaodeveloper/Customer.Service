@@ -14,4 +14,6 @@ public interface IPointsTransactionRepository : IRepositoryBase<int, int>
     // Insert points transaction
     public Task<bool> InserPointByStoredProcedureAsync(int customerId, decimal points, string description, int userCreatorId, CancellationToken cancellationToken);
 
+    public Task<TEntity> InserPointAsync<TEntity>(TEntity entity, CancellationToken cancellationToken) where TEntity : class, IEntityBase<int, int>;
+
 }

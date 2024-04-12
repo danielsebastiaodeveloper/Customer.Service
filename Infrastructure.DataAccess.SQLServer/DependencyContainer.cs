@@ -1,4 +1,5 @@
 ﻿
+using Core.Domain.Abstractions;
 using Infrastructure.DataAccess.SQLServer.Context;
 using Mexico.Developers.EFCore.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +15,7 @@ public static class DependencyContainer
     {
         services.AddDbContext<EstabloCustomerDBContext>(options =>
         options.UseSqlServer(Environment.GetEnvironmentVariable("EstabloCustomerDBConnectionString")));
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddRepositories<int, int, EstabloCustomerDBContext>();
         return services;
     }

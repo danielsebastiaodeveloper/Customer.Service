@@ -2,6 +2,7 @@
 using Core.Application.Wrappers;
 using Establo.Customer.Core.Domain.Abstractions;
 using Core.Application.Mappers;
+using Core.Domain.Abstractions;
 
 namespace Core.Application.Features.Customer.Commands.Update;
 
@@ -43,14 +44,16 @@ public class UpdateCustomerCommand : IRequest<Response<bool>>
 public class UpdateCustomerCommandHandler : IRequestHandler<UpdateCustomerCommand, Response<bool>>
 {
     private readonly ICustomerRepository _customerRepository;
+    private readonly IUnitOfWork unitOfWork;
 
     /// <summary>
     /// Initializes a new instance of the UpdateCustomerCommandHandler class.
     /// </summary>
     /// <param name="customerRepository">The customer repository.</param>
-    public UpdateCustomerCommandHandler(ICustomerRepository customerRepository)
+    public UpdateCustomerCommandHandler(ICustomerRepository customerRepository, IUnitOfWork unitOfWork)
     {
         this._customerRepository = customerRepository;
+        this.unitOfWork = unitOfWork;
     }
 
     /// <summary>
@@ -63,12 +66,13 @@ public class UpdateCustomerCommandHandler : IRequestHandler<UpdateCustomerComman
     {
         var customerMapped = request.ToCustomer();
 
-        var result = await _customerRepository.UpdateItemAsync(customerMapped, cancellationToken);
+        await _customerRepository.UpdateItemAsync(customerMapped, cancellationToken);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
 
         var response = new Response<bool>
         {
-            Data = result,
-            Success = result
+            Data = true,
+            Success = true
         };
         return response;
     }

@@ -28,5 +28,11 @@ public abstract class EntityBase<TKey, TUserKey> : IEntityBase<TKey, TUserKey>
     /// Gets or sets the created date of the entity.
     /// </summary>
     public DateTime CreatedDate { get; set; } = default!;
+
+    protected EntityBase(TKey id) => Id = id;
+
+    protected EntityBase()
+    {
+    }
 }
 

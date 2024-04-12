@@ -21,6 +21,7 @@ public class CustomerRepository : RepositoryBase<int, int>, ICustomerRepository
         }
 
         var transactionsWithCustomers = await base.Context.Set<Customer>()
+            .AsNoTracking()
             .Where(p => p.State == state)
             .Include(p => p.PointsTransactions)
             .ToListAsync(cancellationToken);
@@ -38,6 +39,7 @@ public class CustomerRepository : RepositoryBase<int, int>, ICustomerRepository
         }
 
         var transactionsWithCustomers = await base.Context.Set<Customer>()
+            .AsNoTracking()
             .Where(p => p.Id == id)
             .Include(p => p.PointsTransactions)
             .FirstOrDefaultAsync(cancellationToken);
