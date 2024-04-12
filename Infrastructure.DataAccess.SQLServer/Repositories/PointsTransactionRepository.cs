@@ -14,6 +14,7 @@ public class PointsTransactionRepository : RepositoryBase<int, int>, IPointsTran
 {
     public PointsTransactionRepository(EstabloCustomerDBContext context) : base(context)
     {
+
     }
 
     public async Task<IEnumerable<TEntity>> GetAllPointsTransactionWithCustomerAsync<TEntity>(bool state, CancellationToken cancellationToken) where TEntity : class, IEntityBase<int, int>
