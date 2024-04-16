@@ -1,5 +1,4 @@
-﻿using Core.Domain.Pocos;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace Core.Application.DTOs;
 
@@ -40,10 +39,4 @@ public class CustomerReadDTO
     /// </summary>
     [JsonPropertyName("Points")]
     public decimal Points { get; set; }
-
-    /// <summary>
-    /// Gets or sets the list of points transactions for the customer.
-    /// </summary>
-    [JsonPropertyName("PointsTransactions")]
-    public ICollection<PointsTransactionDTO> PointsTransactions { get; set; } = new List<PointsTransactionDTO>();
 }

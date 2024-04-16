@@ -33,7 +33,7 @@ public class GetCustomerByIdAndSortKeyQueryHandler : IRequestHandler<GetCustomer
     /// <returns>A response containing the customer with the specified ID.</returns>
     public async Task<Response<CustomerReadDTO>> Handle(GetCustomerByIdQuery request, CancellationToken cancellationToken)
     {
-        var result = await _customerRepository.GetCustomerWithTransactionsAsync<Establo.Customer.Core.Domain.Pocos.Customer>(request.Id, cancellationToken);
+        var result = await _customerRepository.GetAsync<Establo.Customer.Core.Domain.Pocos.Customer>(request.Id, cancellationToken);
 
         var dto = result is null ? null : result?.ToCustomerReadDTO();
 

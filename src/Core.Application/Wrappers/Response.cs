@@ -45,7 +45,7 @@ public class Response<T>
     /// </summary>
     /// <param name="data">The data associated with the response.</param>
     /// <param name="message">The message associated with the response.</param>
-    public Response(T data, string message)
+    public Response(T? data, string message)
     {
         Success = true;
         Message = message;

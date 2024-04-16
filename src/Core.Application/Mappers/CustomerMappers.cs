@@ -58,8 +58,7 @@ public static class CustomerMappers
             PhoneNumber = customer.PhoneNumber,
             FullName = customer.FullName,
             State = customer.State,
-            Points = customer.Points,
-            PointsTransactions = customer.PointsTransactions.ToPointsTransactionDTO()
+            Points = customer.Points
         };
     }
 
@@ -77,8 +76,7 @@ public static class CustomerMappers
             PhoneNumber = customer.PhoneNumber,
             FullName = customer.FullName,
             State = customer.State,
-            Points = customer.Points,
-            PointsTransactions = customer.PointsTransactions.Select(x => x.ToPointsTransactionDTO()).ToList()
+            Points = customer.Points
         });
     }
 
@@ -96,8 +94,7 @@ public static class CustomerMappers
             PhoneNumber = customer.PhoneNumber,
             FullName = customer.FullName,
             State = customer.State,
-            Points = customer.Points,
-            PointsTransactions = customer.PointsTransactions.ToPointsTransactionDTO()
+            Points = customer.Points
         };
     }
 }

@@ -32,15 +32,10 @@ public class GetAllCustomersQueryHandler : IRequestHandler<GetAllCustomersQuery,
     /// <returns>The response containing the list of customer DTOs.</returns>
     public async Task<Response<IEnumerable<CustomerReadDTO>>> Handle(GetAllCustomersQuery request, CancellationToken cancellationToken)
     {
-        var result = await _customerRepository.GetAllCustomerWithTransactionsAsync<Establo.Customer.Core.Domain.Pocos.Customer>(request.State, cancellationToken);
-
-        var dto = result is null ? [] : result.ToReadCustomerDTO();
-
-        return new Response<IEnumerable<CustomerReadDTO>>
-        {
-            Success = true,
-            Data = dto
-        };
+       
+        var customers = await _customerRepository.GetAllAsync<Establo.Customer.Core.Domain.Pocos.Customer>(request.State, cancellationToken);
+        var dto = customers.Select(c => c.ToCustomerReadDTO()).ToList();
+        return new Response<IEnumerable<CustomerReadDTO>>(dto, "Customers retrieved successfully.");
     }
 }
 

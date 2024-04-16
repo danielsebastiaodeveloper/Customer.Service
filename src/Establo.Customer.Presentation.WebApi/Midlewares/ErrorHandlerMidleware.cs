@@ -1,8 +1,7 @@
-﻿using Core.Application.Wrappers;
-using Establo.Customer.Core.Domain.Pocos;
-using Mexico.Developers.Core.Exceptions;
-using System.Net;
+﻿using System.Net;
 using System.Text.Json;
+using Core.Application.Wrappers;
+using Mexico.Developers.Core.Exceptions;
 
 namespace Presentation.WebApi.Midlewares;
 
@@ -19,11 +18,7 @@ public class ErrorHandlerMidleware
     {
         try
         {
-
             await _next(context);
-            // Midleware de response
-            //...
-
         }
         catch (Exception error)
         {
@@ -34,8 +29,9 @@ public class ErrorHandlerMidleware
             switch (error)
             {
                 case ApiException e:
-                    //Custom Aplication Error
+                    // Custom Aplication Error
                     response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    responseModel.Message = e.Message;
                     break;
 
                 case Core.Application.Exceptions.ValidationException e:
@@ -44,12 +40,12 @@ public class ErrorHandlerMidleware
                     responseModel.Errors = e.Errors;
                     break;
                 case KeyNotFoundException e:
-                    //Not Found Error
+                    // Not Found Error
                     response.StatusCode = (int)HttpStatusCode.NotFound;
                     responseModel.Message = e.Message;
                     break;
                 default:
-                    //unhandle Error 
+                    // Unhandle Error 
                     response.StatusCode = (int)HttpStatusCode.InternalServerError;
                     responseModel.Message = error.Message;
                     break;
