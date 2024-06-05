@@ -16,6 +16,7 @@ public class ValidationCustomerExistsAttribute : IAsyncActionFilter
 
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
+        
         if (!context.ActionArguments.TryGetValue("Id", out object? value))
         {
             context.Result = new BadRequestObjectResult("Bad id parameter");
@@ -36,9 +37,10 @@ public class ValidationCustomerExistsAttribute : IAsyncActionFilter
 
         if (result.Data == null)
         {
-            throw new KeyNotFoundException($"Customer with Id = {value} not found");
+            context.Result = new NotFoundObjectResult($"Customer with Id = {value} not found");
+            return;
         }
-
+        context.HttpContext.Items.Add("Id", value);
         context.HttpContext.Items.Add("entity", result.Data);
 
         await next();

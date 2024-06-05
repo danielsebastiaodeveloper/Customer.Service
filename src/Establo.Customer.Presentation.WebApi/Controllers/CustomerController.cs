@@ -15,40 +15,40 @@ namespace Presentation.WebApi.Controllers;
 public class CustomersController : ControllerBase
 {
     private readonly IMediator mediator;
+    private readonly ILogger<CustomersController> _logger;
 
-    public CustomersController(IMediator mediator)
+    public CustomersController(IMediator mediator, ILogger<CustomersController> logger)
     {
         this.mediator = mediator;
+        _logger = logger;
     }
 
     // POST api/customers
     [HttpPost]
     public async Task<IActionResult> Post(CreateCustomerCommand createCustomerCommand, CancellationToken cancellationToken = default)
     {
+        _logger.LogInformation("Creating a new customer with name {Name}", createCustomerCommand.FullName);
         var result = await mediator.Send(createCustomerCommand, cancellationToken);
+        if (!result.Success)
+        {
+            _logger.LogWarning("Failed to create a new customer: {Message}", result.Message);
+            return BadRequest(result);
+        }
+        _logger.LogInformation("Successfully created a new customer with id {Id}", result.Data);
         return CreatedAtRoute("GetById", new { Id = result.Data }, result);
     }
 
     // GET api/customers/xxx
     [HttpGet("{Id}", Name = "GetById")]
     [ServiceFilter(typeof(ValidationCustomerExistsAttribute))]
-    public async Task<ActionResult<Response<CustomerReadDTO>>> GetById(int Id)
+    public ActionResult<Response<CustomerReadDTO>> GetById(int Id)
     {
-        if (Id <= 0)
+        var customer = HttpContext.Items["entity"] as CustomerReadDTO;
+        return Ok(new Response<CustomerReadDTO>()
         {
-            return BadRequest();
-        }
-
-        var task = await Task.Run(() =>
-        {
-            var customer = HttpContext.Items["entity"] as CustomerReadDTO;
-            return new Response<CustomerReadDTO>()
-            {
-                Data = customer,
-                Success = true
-            };
+            Data = customer,
+            Success = true
         });
-        return Ok(task);
     }
 
 
