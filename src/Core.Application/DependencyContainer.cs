@@ -1,5 +1,7 @@
 ﻿using Core.Application.Behaviours;
+using Core.Application.Consumers;
 using FluentValidation;
+using MassTransit;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
@@ -23,6 +25,24 @@ public static class DependencyContainer
         services.AddMediatR(cfg =>
         {
             cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+        });
+
+        services.AddMassTransit(x =>
+        {
+            x.AddConsumer<CustomerCreatedConsumer>();
+            x.UsingRabbitMq((context, cfg) =>
+            {
+                cfg.Host("localhost", "/", h =>
+                {
+                    h.Username("guest");
+                    h.Password("guest");
+                });
+
+                cfg.ReceiveEndpoint("Core.Domain.Notifications:CustomerCreatedNotification", e =>
+                {
+                    e.ConfigureConsumer<CustomerCreatedConsumer>(context);
+                });
+            });
         });
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviours<,>));
         return services;

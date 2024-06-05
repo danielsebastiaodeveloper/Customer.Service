@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
 using Core.Domain.Notifications;
+using MassTransit;
 
 namespace Core.Application.EventHandlers;
 
@@ -11,35 +12,26 @@ namespace Core.Application.EventHandlers;
 public class CustomerCreatedEventHandler : INotificationHandler<CustomerCreatedNotification>
 {
     private readonly ILogger<CustomerCreatedEventHandler> _logger;
+    private readonly IBusControl _bus;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="CustomerCreatedEventHandler"/> class.
-    /// </summary>
-    /// <param name="logger">The logger.</param>
-    public CustomerCreatedEventHandler(ILogger<CustomerCreatedEventHandler> logger)
+    public CustomerCreatedEventHandler(ILogger<CustomerCreatedEventHandler> logger, IBusControl bus)
     {
         _logger = logger;
+        _bus = bus;
     }
 
-    /// <summary>
-    /// Handles the CustomerCreatedNotification.
-    /// </summary>
-    /// <param name="notification">The CustomerCreatedNotification to handle.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>A task representing the asynchronous operation.</returns>
-    public Task Handle(CustomerCreatedNotification notification, CancellationToken cancellationToken)
+    public async Task Handle(CustomerCreatedNotification notification, CancellationToken cancellationToken)
     {
         try
         {
             _logger.LogInformation($"Yesss! I got the notification. \nNow I can publish to the brober using MassTRansit: Customer - {notification.customerId} " + $"- {notification.fullName} - {notification.email}");
 
-            //TODO: Here you can publish the notification to the broker using MassTransit.
+            var endpoint = await _bus.GetSendEndpoint(new Uri("rabbitmq://rabbitmq/Core.Domain.Notifications:CustomerCreatedNotification"));  //?bind=true&queue=dotnetgigs
+            await endpoint.Send(notification);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error handling the CustomerCreatedNotification.");
         }
-
-        return Task.CompletedTask;
     }
 }

@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.DataAccess.S
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IoC", "src\IoC\IoC.csproj", "{8D75C339-22FE-490D-94DF-2BF489E8D74B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Message", "src\Infrastructure.Message\Infrastructure.Message.csproj", "{46136438-09DC-4CEB-8DF7-40CCF43382A8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,10 @@ Global
 		{8D75C339-22FE-490D-94DF-2BF489E8D74B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D75C339-22FE-490D-94DF-2BF489E8D74B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8D75C339-22FE-490D-94DF-2BF489E8D74B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46136438-09DC-4CEB-8DF7-40CCF43382A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46136438-09DC-4CEB-8DF7-40CCF43382A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46136438-09DC-4CEB-8DF7-40CCF43382A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46136438-09DC-4CEB-8DF7-40CCF43382A8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -51,6 +57,7 @@ Global
 		{5A75836A-7C93-4171-BD8A-8AED16F7FC41} = {A7D3E678-8562-4B8A-8070-7DC5EFE7520D}
 		{701D33C1-680B-4466-92DB-380FE5FABFD4} = {A7D3E678-8562-4B8A-8070-7DC5EFE7520D}
 		{8D75C339-22FE-490D-94DF-2BF489E8D74B} = {A7D3E678-8562-4B8A-8070-7DC5EFE7520D}
+		{46136438-09DC-4CEB-8DF7-40CCF43382A8} = {A7D3E678-8562-4B8A-8070-7DC5EFE7520D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8C89D2BF-D7AA-4161-A05E-F6F958468104}
