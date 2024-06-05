@@ -3,6 +3,7 @@ using Core.Application.Mappers;
 using Core.Application.Wrappers;
 using Core.Domain.Abstractions;
 using Establo.Customer.Core.Domain.Abstractions;
+using Core.Domain.Notifications;
 
 namespace Core.Application.Features.Customer.Commands.Create;
 
@@ -34,15 +35,17 @@ public class CreateCustomerCommandHandler : IRequestHandler<CreateCustomerComman
 {
     private readonly ICustomerRepository _customerRepository;
     private readonly IUnitOfWork unitOfWork;
+    private readonly IMediator mediator;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CreateCustomerCommandHandler"/> class.
     /// </summary>
     /// <param name="clienteRepository">The customer repository.</param>
-    public CreateCustomerCommandHandler(ICustomerRepository clienteRepository, IUnitOfWork unitOfWork)
+    public CreateCustomerCommandHandler(ICustomerRepository clienteRepository, IUnitOfWork unitOfWork, IMediator mediator)
     {
         _customerRepository = clienteRepository;
         this.unitOfWork = unitOfWork;
+        this.mediator = mediator;
     }
 
     /// <summary>
@@ -56,6 +59,7 @@ public class CreateCustomerCommandHandler : IRequestHandler<CreateCustomerComman
         var customer = request.ToCustomer();
         await _customerRepository.CreateItemAsync(customer, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
+        await mediator.Publish(new CustomerCreatedNotification(customer.Id, customer.FullName, customer.Email), cancellationToken);
         var response = new Response<int>()
         {
             Data = customer.Id,

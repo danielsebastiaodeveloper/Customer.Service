@@ -27,19 +27,19 @@ public class CustomersController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Post(CreateCustomerCommand createCustomerCommand, CancellationToken cancellationToken = default)
     {
-        _logger.LogInformation("Creating a new customer with name {Name}", createCustomerCommand.FullName);
+        _logger.LogInformation($"Executing end-point to create a new customer with Name - {createCustomerCommand.FullName}");
         var result = await mediator.Send(createCustomerCommand, cancellationToken);
         if (!result.Success)
         {
-            _logger.LogWarning("Failed to create a new customer: {Message}", result.Message);
+            _logger.LogWarning($"Failed to create a new customer with Name - {createCustomerCommand.FullName} - Message: {result.Message}");
             return BadRequest(result);
         }
-        _logger.LogInformation("Successfully created a new customer with id {Id}", result.Data);
-        return CreatedAtRoute("GetById", new { Id = result.Data }, result);
+        _logger.LogInformation($"Successfully created a new customer with Id - {result.Data}");
+        return CreatedAtRoute(nameof(GetById), new { Id = result.Data }, result);
     }
 
     // GET api/customers/xxx
-    [HttpGet("{Id}", Name = "GetById")]
+    [HttpGet("{Id}", Name = nameof(GetById))]
     [ServiceFilter(typeof(ValidationCustomerExistsAttribute))]
     public ActionResult<Response<CustomerReadDTO>> GetById(int Id)
     {

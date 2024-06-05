@@ -6,6 +6,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 var configuration = builder.Configuration;
 
+builder.Logging.ClearProviders().AddConsole();
+
 // Add services to the container.
 builder.Services.AddEstabloDependencies(configuration);
 
